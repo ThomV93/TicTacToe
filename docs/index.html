@@ -8,16 +8,35 @@
         <link rel="stylesheet" type="text/css" href="main.css">
     </head>
     <body>
-        <div id="board">
-            <div id="s0" class="board-square"></div>
-            <div id="s1" class="board-square"></div>
-            <div id="s2" class="board-square"></div>
-            <div id="s3" class="board-square"></div>
-            <div id="s4" class="board-square"></div>
-            <div id="s5" class="board-square"></div>
-            <div id="s6" class="board-square"></div>
-            <div id="s7" class="board-square"></div>
-            <div id="s8" class="board-square"></div>
+        <div id="board-container">
+            <div id="board">
+                <div id="s0" class="board-square"></div>
+                <div id="s1" class="board-square"></div>
+                <div id="s2" class="board-square"></div>
+                <div id="s3" class="board-square"></div>
+                <div id="s4" class="board-square"></div>
+                <div id="s5" class="board-square"></div>
+                <div id="s6" class="board-square"></div>
+                <div id="s7" class="board-square"></div>
+                <div id="s8" class="board-square"></div>
+            </div>
+            <div id="sidebar">
+                <div id="AI-level">
+                    <h3>Game Difficulty</h3>
+                    <select id="levels">
+                        <option value="" selected disabled hidden>Select a Level</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                        <option value="unbeatable">Unbeatable</option>
+                    </select>
+                </div>
+                <div id="player-choice">
+                    <h3>Choose your marker</h3>
+                    <button id="o-btn" type="button">O</button>
+                    <button id="x-btn" type="button">X</button>
+                </div>
+            </div>
         </div>
     </body>
     <script type="text/javascript" src="script.js"></script>
