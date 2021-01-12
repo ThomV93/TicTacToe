@@ -3,7 +3,6 @@ const player = (marker) => {
     let _marker = marker;
     let getMarker = () => _marker;
 
-
     return {getMarker};
 };
 
@@ -16,12 +15,18 @@ const gameBoard = (() => {
     let _board = new Array(9);
     let player1 = player("x");
 
+    let _pushToBoard = ((idx) => {
+        let playerMarker = player1.getMarker();
+        _board.splice(idx, 1, playerMarker);
+    });
+
     //add event to each square
     let _getPlayerMove = (() => {
         for (i = 0; i < _displayBoard.length; i++) {
             _displayBoard[i].addEventListener("click", e => {
                 selectedCell = e.target.id.slice(-1);
-                _renderPlayerChoice(selectedCell);
+                _pushToBoard(selectedCell);//push the selected move to the equivalent idx position of the array
+                _renderPlayerChoice(selectedCell);//display the selected move in the board
             });
         };
     });
@@ -47,14 +52,14 @@ const gameBoard = (() => {
 
 
 //PLAYER
-//player escolhe marker
-//player escolhe nivel do AI
 
 //BOARD
-//escuta a jogada do player
+//player escolhe marker
+//escuta a jogada do player - OK
+//player escolhe nivel do AI
+//marker é colocado no index certo na lista - OK
+//marker é representado no display na posicao certa - OK
 //computador faz a jogada
-//marker é colocado no index certo na lista
-//marker é representado no display na posicao certa
 //todos os processos envolvendo DOM
 
 //GAME
