@@ -1,3 +1,4 @@
+//player factory
 const player = (marker) => {
     let _marker = marker;
     let getMarker = () => _marker;
@@ -15,8 +16,14 @@ const gameBoard = (() => {
     let _board = new Array(9);
     let player1 = player("x");
 
-    let _getPlayerChoice = (() => {
-
+    //add event to each square
+    let _getPlayerMove = (() => {
+        for (i = 0; i < _displayBoard.length; i++) {
+            _displayBoard[i].addEventListener("click", e => {
+                selectedCell = e.target.id.slice(-1);
+                _renderPlayerChoice(selectedCell);
+            });
+        };
     });
 
     //get the selected square
@@ -29,8 +36,10 @@ const gameBoard = (() => {
     let _renderPlayerChoice = (selected) => {
         let move = document.createElement("div");
         move.classList = player1.getMarker();
-        _getDisplaySquare(selected).append(move);
+        _getDisplaySquare(selected).appendChild(move);
     };
+
+    _getPlayerMove();
 
 })();
 
