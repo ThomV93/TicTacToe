@@ -2,6 +2,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: 'MuseoModerno', cursive;
     box-sizing: border-box;
     height: 100vh;
     width: 100vw;
@@ -26,11 +27,39 @@ html, body {
 #board {
     display: grid;
     gap: 5px;
+    margin: 30px;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     background-color: #ff6246;
     height: 300px;
     width: 300px;
+}
+
+#sidebar {
+    width: 30%;
+    height: 100%;
+}
+
+button, #levels {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    background-color: #ff6246;
+    color: #fff;
+    font-size: 1em;
+    font-weight: 400;
+    line-height: 1.5rem;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: all 150ms ease-out;
+}
+
+button:focus {
+    background-color: #ff7359;
+    box-shadow: 0 0 0 3px white, 0 0 0 5px #ff7359;
 }
 
 .board-square {
