@@ -15,20 +15,15 @@ const gameBoard = (() => {
     let _board = new Array(9);
     let player1 = player("x");
 
+    //initialize all the necessary functions related to the player object
+    let _playerInit = () => {
+        _getPlayerMove();
+    };
+
+    //insert the selected marker in the equivalent array index
     let _pushToBoard = ((idx) => {
         let playerMarker = player1.getMarker();
         _board.splice(idx, 1, playerMarker);
-    });
-
-    //add event to each square
-    let _getPlayerMove = (() => {
-        for (i = 0; i < _displayBoard.length; i++) {
-            _displayBoard[i].addEventListener("click", e => {
-                selectedCell = e.target.id.slice(-1);
-                _pushToBoard(selectedCell);//push the selected move to the equivalent idx position of the array
-                _renderPlayerChoice(selectedCell);//display the selected move in the board
-            });
-        };
     });
 
     //get the selected square
@@ -44,7 +39,18 @@ const gameBoard = (() => {
         _getDisplaySquare(selected).appendChild(move);
     };
 
-    _getPlayerMove();
+    //add event to each square
+    let _getPlayerMove = (() => {
+        for (i = 0; i < _displayBoard.length; i++) {
+            _displayBoard[i].addEventListener("click", e => {
+                selectedCell = e.target.id.slice(-1);
+                _pushToBoard(selectedCell);//store the selected move in the array
+                _renderPlayerChoice(selectedCell);//display the selected move in the board
+            });
+        };
+    });
+
+    _playerInit();
 
 })();
 
@@ -60,7 +66,6 @@ const gameBoard = (() => {
 //marker é colocado no index certo na lista - OK
 //marker é representado no display na posicao certa - OK
 //computador faz a jogada
-//todos os processos envolvendo DOM
 
 //GAME
 //testa se o round tem vencedor
@@ -69,3 +74,6 @@ const gameBoard = (() => {
 //AI
 //retorna os niveis de dificuldade possiveis
 //retorna a jogada baseada na dificuldade
+
+//DISPLAY
+//borda branca no bg para corrigir o bug do tabuleiro

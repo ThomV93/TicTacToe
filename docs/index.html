@@ -10,36 +10,44 @@
         <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@200;400;600&display=swap" rel="stylesheet">
     </head>
     <body>
-        <div id="board-container">
-            <div id="board">
-                <div id="s0" class="board-square"></div>
-                <div id="s1" class="board-square"></div>
-                <div id="s2" class="board-square"></div>
-                <div id="s3" class="board-square"></div>
-                <div id="s4" class="board-square"></div>
-                <div id="s5" class="board-square"></div>
-                <div id="s6" class="board-square"></div>
-                <div id="s7" class="board-square"></div>
-                <div id="s8" class="board-square"></div>
+        <main>
+            <div id="scoreboard">
+                <h3>Scoreboard</h3>
+                <p><span id="player-score">0</span> - <span id="computer-score">0</span></p>
             </div>
-            <div id="sidebar">
-                <div id="AI-level">
-                    <h3>Game Difficulty</h3>
-                    <select id="levels">
-                        <option value="" selected disabled hidden>Select a Level</option>
-                        <option value="easy">Easy</option>
-                        <option value="medium">Medium</option>
-                        <option value="hard">Hard</option>
-                        <option value="unbeatable">Unbeatable</option>
-                    </select>
+            <div id="main-container">
+                <div id="board">
+                    <div id="s0" class="board-square"></div>
+                    <div id="s1" class="board-square"></div>
+                    <div id="s2" class="board-square"></div>
+                    <div id="s3" class="board-square"></div>
+                    <div id="s4" class="board-square"></div>
+                    <div id="s5" class="board-square"></div>
+                    <div id="s6" class="board-square"></div>
+                    <div id="s7" class="board-square"></div>
+                    <div id="s8" class="board-square"></div>
                 </div>
-                <div id="player-choice">
-                    <h3>Choose your marker</h3>
-                    <button id="o-btn" type="button">O</button>
-                    <button id="x-btn" type="button">X</button>
+                <div id="sidebar">
+                    <div id="AI-level" class="sidebar-container">
+                        <h3>AI Level</h3>
+                        <select id="levels">
+                            <option value="" selected disabled hidden>Select a Level</option>
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                            <option value="unbeatable">Unbeatable</option>
+                        </select>
+                    </div>
+                    <div id="player-choice" class="sidebar-container">
+                        <h3>Select Marker</h3>
+                        <div id="marker-btn-container">
+                            <button id="btn-x" class= "marker-btn" type="button">X</button>
+                            <button id="btn-o" class= "marker-btn" type="button">O</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </main>
     </body>
     <script type="text/javascript" src="script.js"></script>
 </html>

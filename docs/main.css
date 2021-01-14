@@ -1,7 +1,8 @@
 html, body {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     font-family: 'MuseoModerno', cursive;
     box-sizing: border-box;
     height: 100vh;
@@ -10,14 +11,21 @@ html, body {
     overflow: hidden;
 }
 
-#board-container {
+h1 {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: bolder;
+    text-shadow: 1px 1px 3px #333;
+}
+
+#main-container {
     display: flex;
     box-sizing: border-box;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    border-radius: 15px;
-    padding: 30px;
+    padding: 15px;
+    border-radius: 0px 0px 15px 15px;
     height: 400px;
     width: 700px;
     background-color: #fff;
@@ -36,8 +44,40 @@ html, body {
 }
 
 #sidebar {
-    width: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    box-sizing: border-box;
+    width: 40%;
     height: 100%;
+}
+
+h3 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.sidebar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+}
+
+#scoreboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ff6246;
+    color: #fff;
+    border-radius: 15px 15px 0px 0px;
+    width: 700px;
+}
+
+#scoreboard > p {
+    margin: 0;
+    font-size: 1.5rem;
 }
 
 button, #levels {
@@ -67,6 +107,10 @@ button:focus {
     justify-content: center;
     align-items: center;
     background-color: #fff;
+}
+
+#btn-o {
+    margin-left: 30px;
 }
 
 .o {
