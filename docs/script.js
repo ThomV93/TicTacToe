@@ -8,9 +8,11 @@ const player = (marker) => {
 
 
 //board module
-const gameBoard = (() => {
+const board = (() => {
+
     //cache all DOM elements
     const _displayBoard = Array.from(document.getElementsByClassName("board-square"));
+
     //sets an empty array with 9 slots
     let _board = new Array(9);
     let player1 = player("x");
@@ -23,21 +25,32 @@ const gameBoard = (() => {
     //insert the selected marker in the equivalent array index
     let _pushToBoard = ((idx) => {
         let playerMarker = player1.getMarker();
-        _board.splice(idx, 1, playerMarker);
-    });
-
-    //get the selected square
-    let _getDisplaySquare = ((pos) =>{
-        let displayBoardPosition = _displayBoard[pos];
-        return displayBoardPosition;
+        //only push if the position is empty
+        if (_displayBoard[idx] != undefined){
+            _board.splice(idx, 1, playerMarker);
+        };
     });
 
     //creates the visual representation for the choices
     let _renderPlayerChoice = (selected) => {
         let move = document.createElement("div");
         move.classList = player1.getMarker();
-        _getDisplaySquare(selected).appendChild(move);
+        //only push if the position is empty
+        if (_displayBoard[selected] != undefined) {
+            _displayBoard[selected].appendChild(move);
+        };
     };
+
+    //return a string with the indexes containing the especified marker
+    let _reduceIdx = ((marker) => {
+        const indexes = _board.reduce((idx, item, i) => {
+            if (item === marker) {
+                idx += i;
+            };
+            return idx;
+        }, []);
+        return {indexes};
+    });
 
     //add event to each square
     let _getPlayerMove = (() => {
@@ -46,11 +59,22 @@ const gameBoard = (() => {
                 selectedCell = e.target.id.slice(-1);
                 _pushToBoard(selectedCell);//store the selected move in the array
                 _renderPlayerChoice(selectedCell);//display the selected move in the board
+                console.log(_reduceIdx("x"));
             });
         };
     });
 
     _playerInit();
+
+})();
+
+
+//game module
+const game = (() => {
+
+    let checkGame = (() => {
+
+    });
 
 })();
 
@@ -74,6 +98,3 @@ const gameBoard = (() => {
 //AI
 //retorna os niveis de dificuldade possiveis
 //retorna a jogada baseada na dificuldade
-
-//DISPLAY
-//borda branca no bg para corrigir o bug do tabuleiro
