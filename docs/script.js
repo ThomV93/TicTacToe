@@ -11,7 +11,7 @@ const game = (() => {
 
     //check for winner
     let checkWin = ((idx) => {
-        let _possibleWins = ["048", "246", "012", "345", "678", "036", "147", "258"]; 
+        let _possibleWins = ["048", "246", "012", "345", "678", "036", "147", "258", "0148", "0248", "0348", "0458", "0468", "0478", "2346", "2456"]; 
         //RegEx constructor from all possible winning combinations
         let masterPattern = new RegExp(_possibleWins.join("|"));
         return masterPattern.test(idx);
@@ -77,6 +77,7 @@ const board = (() => {
                 _renderPlayerChoice(selectedCell);//display the selected move in the board
 
                 let xMoves = _reduceIdx("x").indexes;
+                console.log(xMoves);
                 console.log(game.checkWin(xMoves));
             });
         };
