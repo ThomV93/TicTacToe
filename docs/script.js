@@ -6,6 +6,21 @@ const player = (marker) => {
     return {getMarker};
 };
 
+//game module
+const game = (() => {
+
+    //check for winner
+    let checkWin = ((idx) => {
+        let _possibleWins = ["048", "246", "012", "345", "678", "036", "147", "258"]; 
+        //RegEx constructor from all possible winning combinations
+        let masterPattern = new RegExp(_possibleWins.join("|"));
+        return masterPattern.test(idx);
+    });
+
+    return {checkWin};
+
+})();
+
 
 //board module
 const board = (() => {
@@ -56,26 +71,19 @@ const board = (() => {
     let _getPlayerMove = (() => {
         for (i = 0; i < _displayBoard.length; i++) {
             _displayBoard[i].addEventListener("click", e => {
-                selectedCell = e.target.id.slice(-1);
+
+                let selectedCell = e.target.id.slice(-1);
                 _pushToBoard(selectedCell);//store the selected move in the array
                 _renderPlayerChoice(selectedCell);//display the selected move in the board
-                console.log(_reduceIdx("x"));
+
+                let xMoves = _reduceIdx("x").indexes;
+                console.log(game.checkWin(xMoves));
             });
         };
     });
-
+    
     _playerInit();
-
-})();
-
-
-//game module
-const game = (() => {
-
-    let checkGame = (() => {
-
-    });
-
+    
 })();
 
 
