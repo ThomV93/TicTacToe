@@ -97,7 +97,7 @@ button, #levels {
     transition: all 150ms ease-out;
 }
 
-button:focus {
+.clicked-button {
     background-color: #ff7359;
     box-shadow: 0 0 0 3px white, 0 0 0 5px #ff7359;
 }
