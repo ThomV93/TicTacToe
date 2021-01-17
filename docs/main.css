@@ -10,6 +10,13 @@ html, body {
     overflow: hidden;
 }
 
+#game-alert {
+    font-family: 'MuseoModerno', cursive;
+    font-size: 3rem;
+    text-align: center;
+    margin-top: -100px;
+}
+
 #main-container {
     display: flex;
     box-sizing: border-box;
@@ -45,6 +52,7 @@ html, body {
 
 #reset-btn:hover {
     background-color: #fff;
+    box-shadow: 0 0 10px #fff;
 }
 
 button, #levels {
