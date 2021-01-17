@@ -3,7 +3,6 @@ html, body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-family: 'MuseoModerno', cursive;
     box-sizing: border-box;
     height: 100vh;
     width: 100vw;
@@ -11,18 +10,10 @@ html, body {
     overflow: hidden;
 }
 
-h1 {
-    text-align: center;
-    font-size: 3rem;
-    font-weight: bolder;
-    text-shadow: 1px 1px 3px #333;
-}
-
 #main-container {
     display: flex;
     box-sizing: border-box;
-    flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     padding: 15px;
     border-radius: 0px 0px 15px 15px;
@@ -32,52 +23,28 @@ h1 {
     box-shadow: 0 16px 31px -17px rgba(0,0,0,0.6);
 }
 
-#board {
-    display: grid;
-    gap: 5px;
-    margin: 30px;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    background-color: #ff6246;
-    height: 300px;
-    width: 300px;
-}
-
-#sidebar {
+#gamebar {
     display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    width: 700px;
+    padding: 0 30px 0 30px;
+    border-radius: 15px 15px 0px 0px;
     box-sizing: border-box;
-    width: 40%;
-    height: 100%;
-}
-
-h3 {
-    font-size: 1.5rem;
-    margin: 0;
-}
-
-.sidebar-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    width: 100%;
-}
-
-#scoreboard {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     background-color: #ff6246;
     color: #fff;
-    border-radius: 15px 15px 0px 0px;
-    width: 700px;
 }
 
-#scoreboard > p {
-    margin: 0;
-    font-size: 1.5rem;
+#reset-btn {
+    font-family: 'MuseoModerno', cursive;
+    background-color: #f3f3f3;
+    color: #ff6246;
+    width: 120px;
+}
+
+#reset-btn:hover {
+    background-color: #fff;
 }
 
 button, #levels {
@@ -97,9 +64,24 @@ button, #levels {
     transition: all 150ms ease-out;
 }
 
+#levels {
+    font-family: 'MuseoModerno', cursive;
+}
+
 .clicked-button {
     background-color: #ff7359;
     box-shadow: 0 0 0 3px white, 0 0 0 5px #ff7359;
+}
+
+#board {
+    display: grid;
+    gap: 5px;
+    margin: 30px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    background-color: #ff6246;
+    height: 330px;
+    width: 330px;
 }
 
 .board-square {
@@ -121,8 +103,8 @@ button, #levels {
 }
 
 .x {
-    height: 65%;
-    width: 65%;
+    height: 60%;
+    width: 60%;
     background: linear-gradient(#ff6246,#ff6246), linear-gradient(#ff6246,#ff6246);
     background-position: center;
     background-size: 100% 5px,5px 100%;

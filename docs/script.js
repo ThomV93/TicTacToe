@@ -31,8 +31,6 @@ const board = (() => {
     const _displayBoard = Array.from(document.getElementsByClassName("board-square"));
     const _xbuttonMarker = document.getElementById("btn-x");
     const _obuttonMarker = document.getElementById("btn-o");
-    const _playerScore = document.getElementById("player-score");
-    const _computerScore = document.getElementById("computer-score");
 
     //sets an empty array with 9 slots
     let _board = new Array(9);
@@ -52,10 +50,10 @@ const board = (() => {
     let _markerBtns = (() => {
         //start with the x button focused
         _xbuttonMarker.classList = "clicked-button";
-
         //add click event to the x button
         _xbuttonMarker.addEventListener("click", () => {
             _markerSetter("x");
+            _xbuttonMarker.classList = "clicked-button";
             _obuttonMarker.classList.remove("clicked-button");
         });
 
@@ -138,3 +136,7 @@ const board = (() => {
 //AI
 //retorna os niveis de dificuldade possiveis
 //retorna a jogada baseada na dificuldade
+
+//BUGS
+//can add two divs at the same square of the board
+//exceptions to the winning test for vertical combinations

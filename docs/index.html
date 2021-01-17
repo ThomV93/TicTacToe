@@ -11,9 +11,24 @@
     </head>
     <body>
         <main>
-            <div id="scoreboard">
-                <h3>Scoreboard</h3>
-                <p><span id="player-score">0</span> - <span id="computer-score">0</span></p>
+            <div id="gamebar">
+                <div id="AI-level" class="gamebar-container">
+                    <select id="levels">
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                        <option value="unbeatable">Unbeatable</option>
+                    </select>
+                </div>
+                <div>
+                    <button id="reset-btn" type="button">Reset</button>
+                </div>
+                <div id="player-choice" class="gamebar-container">
+                    <div id="marker-btn-container">
+                        <button id="btn-x" class= "marker-btn" type="button">X</button>
+                        <button id="btn-o" class= "marker-btn" type="button">O</button>
+                    </div>
+                </div>
             </div>
             <div id="main-container">
                 <div id="board">
@@ -26,25 +41,6 @@
                     <div id="s6" class="board-square"></div>
                     <div id="s7" class="board-square"></div>
                     <div id="s8" class="board-square"></div>
-                </div>
-                <div id="sidebar">
-                    <div id="player-choice" class="sidebar-container">
-                        <h3>Select Marker</h3>
-                        <div id="marker-btn-container">
-                            <button id="btn-x" class= "marker-btn" type="button">X</button>
-                            <button id="btn-o" class= "marker-btn" type="button">O</button>
-                        </div>
-                    </div>
-                    <div id="AI-level" class="sidebar-container">
-                        <h3>AI Level</h3>
-                        <select id="levels">
-                            <option value="" selected disabled hidden>Select a Level</option>
-                            <option value="easy">Easy</option>
-                            <option value="medium">Medium</option>
-                            <option value="hard">Hard</option>
-                            <option value="unbeatable">Unbeatable</option>
-                        </select>
-                    </div>
                 </div>
             </div>
         </main>
