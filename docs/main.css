@@ -14,7 +14,7 @@ html, body {
     font-family: 'MuseoModerno', cursive;
     font-size: 3rem;
     text-align: center;
-    margin-top: -100px;
+    margin: 0;
 }
 
 #main-container {
@@ -111,8 +111,8 @@ button, #levels {
 }
 
 .x {
-    height: 60%;
-    width: 60%;
+    height: 70%;
+    width: 70%;
     background: linear-gradient(#ff6246,#ff6246), linear-gradient(#ff6246,#ff6246);
     background-position: center;
     background-size: 100% 5px,5px 100%;

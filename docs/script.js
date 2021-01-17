@@ -11,15 +11,51 @@ const player = (marker) => {
 const game = (() => {
 
     //check for winner
-    let checkWin = ((idx) => {
-        //the combinations with 4 digits cover the diagonal exceptions
+    let _checkWin = ((idx) => {
+        //the combinations with 4 digits cover exceptions
         let _possibleWins = ["048", "246", "012", "345", "678", "036", "147", "258", "0148", "0248", "0348", "0458", "0468", "0478", "2346", "2456"]; 
         //RegEx constructor from all possible winning combinations
         let _masterPattern = new RegExp(_possibleWins.join("|"));
         return _masterPattern.test(idx);
     });
 
-    return {checkWin};
+    //game outcomes
+    let _win = ((board, alert) => {
+        board.style.display = "none";
+        alert.innerHTML = "You won the game!"
+    });
+
+    let _lose = ((board, alert) => {
+        board.style.display = "none";
+        alert.innerHTML = "You lost the game!"
+    });
+
+    let _draw = ((board, alert) => {
+        board.style.display = "none";
+        alert.innerHTML = "It's a draw!"
+    });
+
+    //check if the game is over
+    let gameOver = ((playerMoves, computerMoves, displayBoard, alertText, boardArray) => {
+        //check for winning combinations
+        let playerTest = _checkWin(playerMoves);
+        let computerTest = _checkWin(computerMoves);
+
+        //sum up all items in array
+        let arrItems = boardArray.reduce((acc, item) => acc + item, "");
+        //get the length of the string created
+        let arrFull = arrItems.length;
+        
+        if (playerTest !== false) {
+            _win(displayBoard, alertText);
+        } else if (computerTest !== false) {
+            _lose(displayBoard, alertText);
+        } else if (arrFull === 9) {
+            _draw(displayBoard, alertText);
+        };
+    });
+
+    return {gameOver};
 
 })();
 
@@ -28,9 +64,11 @@ const game = (() => {
 const board = (() => {
 
     //cache all DOM elements
-    const _displayBoard = Array.from(document.getElementsByClassName("board-square"));
+    const _displayBoard = document.getElementById("board");
+    const _displayBoardSquares = Array.from(document.getElementsByClassName("board-square"));
     const _xbuttonMarker = document.getElementById("btn-x");
     const _obuttonMarker = document.getElementById("btn-o");
+    const _alertText = document.getElementById("game-alert");
 
     //sets an empty array with 9 slots
     let _board = new Array(9);
@@ -47,6 +85,7 @@ const board = (() => {
         player1.setMarker(marker);
     });
 
+    //add click event to the marker buttons
     let _markerBtns = (() => {
         //start with the x button focused
         _xbuttonMarker.classList = "clicked-button";
@@ -69,7 +108,7 @@ const board = (() => {
     let _pushToBoard = ((idx) => {
         let playerMarker = player1.getMarker();
         //only push if the position is empty
-        if (_displayBoard[idx] != undefined){
+        if (_displayBoardSquares[idx] != undefined){
             _board.splice(idx, 1, playerMarker);
         };
     });
@@ -79,17 +118,15 @@ const board = (() => {
         let move = document.createElement("div");
         move.classList = player1.getMarker();
         //only push if the position is empty
-        if (_displayBoard[selected] != undefined) {
-            _displayBoard[selected].appendChild(move);
+        if (_displayBoardSquares[selected] != undefined) {
+            _displayBoardSquares[selected].appendChild(move);
         };
     };
 
     //return a string with the indexes containing the specified marker
     let _reduceIdx = ((marker) => {
         const indexes = _board.reduce((idx, item, i) => {
-            if (item === marker) {
-                idx += i;
-            };
+            if (item === marker) {idx += i;};
             return idx;
         }, []);
         return {indexes};
@@ -97,17 +134,19 @@ const board = (() => {
 
     //add event to each square
     let _getPlayerMove = (() => {
-        for (i = 0; i < _displayBoard.length; i++) {
-            _displayBoard[i].addEventListener("click", e => {
+        for (i = 0; i < _displayBoardSquares.length; i++) {
+            _displayBoardSquares[i].addEventListener("click", e => {
                 //get the position form the id of the button clicked
                 let selectedCell = e.target.id.slice(-1);
                 _pushToBoard(selectedCell);//store the selected move in the array
                 _renderPlayerChoice(selectedCell);//display the selected move in the board
 
+                //calculate the index
                 let xMoves = _reduceIdx("x").indexes;
                 let oMoves = _reduceIdx("o").indexes;
-                console.log(game.checkWin(xMoves));
-                console.log(game.checkWin(oMoves));
+
+                //check if the game is over and run the necessary functions
+                game.gameOver(xMoves, oMoves, _displayBoard, _alertText, _board);
             });
         };
     });
@@ -117,21 +156,7 @@ const board = (() => {
 })();
 
 
-
-
-//PLAYER
-
-//BOARD
-//player escolhe marker
-//escuta a jogada do player - OK
-//player escolhe nivel do AI
-//marker é colocado no index certo na lista - OK
-//marker é representado no display na posicao certa - OK
-//computador faz a jogada
-
-//GAME
-//testa se o round tem vencedor
-//testa se o jogo tem vencedor
+// ---- TO DO ------
 
 //AI
 //retorna os niveis de dificuldade possiveis
