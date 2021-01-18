@@ -69,20 +69,31 @@ const board = (() => {
     const _xbuttonMarker = document.getElementById("btn-x");
     const _obuttonMarker = document.getElementById("btn-o");
     const _alertText = document.getElementById("game-alert");
+    const _resetBtn = document.getElementById("reset-btn");
 
     //sets an empty array with 9 slots
     let _board = new Array(9);
+    //initializes the player object
     let player1 = player("x");
 
     //initialize all the necessary functions related to the player object
-    let _playerInit = () => {
+    let _boardInit = () => {
         _getPlayerMove();
         _markerBtns();
+        _resetGame();
     };
 
     //set the marker used by the player
     let _markerSetter = ((marker) => {
         player1.setMarker(marker);
+
+        if (marker === "x") {
+            _xbuttonMarker.classList = "clicked-button";
+            _obuttonMarker.classList.remove("clicked-button");
+        } else if (marker === "o") {
+            _xbuttonMarker.classList.remove("clicked-button");
+            _obuttonMarker.classList = "clicked-button";
+        };
     });
 
     //add click event to the marker buttons
@@ -92,15 +103,11 @@ const board = (() => {
         //add click event to the x button
         _xbuttonMarker.addEventListener("click", () => {
             _markerSetter("x");
-            _xbuttonMarker.classList = "clicked-button";
-            _obuttonMarker.classList.remove("clicked-button");
         });
 
         //add click event to the o button
         _obuttonMarker.addEventListener("click", () => {
             _markerSetter("o");
-            _xbuttonMarker.classList.remove("clicked-button");
-            _obuttonMarker.classList = "clicked-button";
         });
     });
 
@@ -136,8 +143,7 @@ const board = (() => {
     let _getPlayerMove = (() => {
         for (i = 0; i < _displayBoardSquares.length; i++) {
             _displayBoardSquares[i].addEventListener("click", e => {
-                //get the position form the id of the button clicked
-                let selectedCell = e.target.id.slice(-1);
+                let selectedCell = e.target.id.slice(-1); //get the position from the id of the button clicked
                 _pushToBoard(selectedCell);//store the selected move in the array
                 _renderPlayerChoice(selectedCell);//display the selected move in the board
 
@@ -150,8 +156,26 @@ const board = (() => {
             });
         };
     });
+
+    let _resetGame = (() => {
+        let _boardSquares = _displayBoardSquares; //cache the board squares
+
+        //add click event to the reset button
+        _resetBtn.addEventListener("click", () => {
+            _board = new Array(9); //reset the board array
+            _markerSetter("x"); //set the player marker as x and alter the btn focus
+
+            //loop trough the board squares
+            for (i = 0; i < _boardSquares.length; i++) {
+                //remove child, if it exists
+                if (_boardSquares[i].children[0] != undefined) {
+                    _boardSquares[i].removeChild(_boardSquares[i].children[0]); 
+                };
+            };
+        });
+    });
     
-    _playerInit();
+    _boardInit();
     
 })();
 
