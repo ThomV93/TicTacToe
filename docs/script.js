@@ -19,6 +19,7 @@ const game = (() => {
         return _masterPattern.test(idx);
     });
 
+
     //game outcomes
     let _win = ((board, alert) => {
         board.style.display = "none";
@@ -37,6 +38,7 @@ const game = (() => {
         alert.style.display = "inline-block"
         alert.innerHTML = "It's a draw!"
     });
+
 
     //check if the game is over
     let gameOver = ((playerMoves, computerMoves, displayBoard, alertText, boardArray) => {
@@ -80,12 +82,14 @@ const board = (() => {
     let player1 = player("x");
     let computer = player("o");
 
+
     //initialize all the necessary functions related to the player object
     let _boardInit = () => {
         _getPlayerMove();
         _markerBtns();
         _resetGame();
     };
+
 
     //set the marker used by the player
     let _markerSetter = ((marker) => {
@@ -102,6 +106,7 @@ const board = (() => {
         };
     });
 
+
     //add click event to the marker buttons
     let _markerBtns = (() => {
         //start with the x button focused
@@ -117,6 +122,7 @@ const board = (() => {
         });
     });
 
+
     //insert the selected marker in the equivalent array index
     let _pushToBoard = ((player, idx) => {
         let playerMarker = player.getMarker();
@@ -125,6 +131,7 @@ const board = (() => {
             _board.splice(idx, 1, playerMarker);
         };
     });
+
 
     //render the visual representation for the choices
     let _renderPlayerChoice = (player, selected) => {
@@ -136,7 +143,8 @@ const board = (() => {
         };
     };
 
-    //return a string with the indexes containing the specified marker
+
+    //return a string with the indexes containing the specified marker in the array
     let _reduceIdx = ((marker) => {
         const indexes = _board.reduce((idx, item, i) => {
             if (item === marker) {idx += i;};
@@ -145,10 +153,12 @@ const board = (() => {
         return {indexes};
     });
 
+
     let _getAvailableMoves = (() => {
         let emptySlots = _reduceIdx(undefined).indexes;
         return {emptySlots}
     });
+
 
     let _getComputerPlay = (() => {
         availableMoves = _getAvailableMoves().emptySlots;
@@ -156,6 +166,7 @@ const board = (() => {
         randomMove = movesArray[Math.floor(Math.random()*movesArray.length)];
         return {randomMove};
     });
+
 
     let _computerMove = (() => {
         availablePlays = _getAvailableMoves().emptySlots.length;
@@ -167,11 +178,13 @@ const board = (() => {
         };
     });
 
+
     let _playerMove = ((ev) => {
         let selectedCell = ev.target.id.slice(-1); //get the position from the id of the button clicked
         _pushToBoard(player1, selectedCell);//store the selected move in the array
         _renderPlayerChoice(player1, selectedCell);//display the selected move in the board
     });
+
 
     //add event to each square
     let _getPlayerMove = (() => {
@@ -182,36 +195,42 @@ const board = (() => {
                 _computerMove();
 
                 //calculate the index
-                let xMoves = _reduceIdx(player1.getMarker()).indexes;
-                let oMoves = _reduceIdx(computer.getMarker()).indexes;
+                let _xMoves = _reduceIdx(player1.getMarker()).indexes;
+                let _oMoves = _reduceIdx(computer.getMarker()).indexes;
 
                 //check if the game is over and run the necessary functions
-                game.gameOver(xMoves, oMoves, _displayBoard, _alertText, _board);
+                game.gameOver(_xMoves, _oMoves, _displayBoard, _alertText, _board);
             });
         };
     });
 
-    let _resetGame = (() => {
+
+    //render the reset in the displayed elements
+    let _renderReset = (() => {
         let _boardSquares = _displayBoardSquares; //cache the board squares
 
+        //loop trough the board squares
+        for (i = 0; i < _boardSquares.length; i++) {
+            //remove child, if it exists
+            if (_boardSquares[i].children[0] != undefined) {
+                _boardSquares[i].removeChild(_boardSquares[i].children[0]); 
+            };
+        };
+
+        //ensure the grid will be normally displayed after the reset
+        _displayBoard.style.display = "grid";
+        _alertText.style.display = "none";
+    });
+
+
+    let _resetGame = (() => {
         //add click event to the reset button
         _resetBtn.addEventListener("click", () => {
             _board = Array.apply(null, Array(9)).map(() => {});; //reset the board array
             _markerSetter("x"); //set the player marker as x and alter the btn focus
-
-            //loop trough the board squares
-            for (i = 0; i < _boardSquares.length; i++) {
-                //remove child, if it exists
-                if (_boardSquares[i].children[0] != undefined) {
-                    _boardSquares[i].removeChild(_boardSquares[i].children[0]); 
-                };
-            };
-
-            _displayBoard.style.display = "grid";
-            _alertText.style.display = "none";
+            _renderReset();
         });
     });
-
     
     _boardInit();
     
