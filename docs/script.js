@@ -22,16 +22,19 @@ const game = (() => {
     //game outcomes
     let _win = ((board, alert) => {
         board.style.display = "none";
+        alert.style.display = "inline-block"
         alert.innerHTML = "You won the game!"
     });
 
     let _lose = ((board, alert) => {
         board.style.display = "none";
+        alert.style.display = "inline-block"
         alert.innerHTML = "You lost the game!"
     });
 
     let _draw = ((board, alert) => {
         board.style.display = "none";
+        alert.style.display = "inline-block"
         alert.innerHTML = "It's a draw!"
     });
 
@@ -154,22 +157,33 @@ const board = (() => {
         return {randomMove};
     });
 
+    let _computerMove = (() => {
+        availablePlays = _getAvailableMoves().emptySlots.length;
+        //computer move if there are still available moves
+        if (availablePlays != 0) {
+            computerMove = _getComputerPlay().randomMove;
+            _pushToBoard(computer, computerMove);//store the selected move in the array
+            _renderPlayerChoice(computer, computerMove);//display the selected move in the board
+        };
+    });
+
+    let _playerMove = ((ev) => {
+        let selectedCell = ev.target.id.slice(-1); //get the position from the id of the button clicked
+        _pushToBoard(player1, selectedCell);//store the selected move in the array
+        _renderPlayerChoice(player1, selectedCell);//display the selected move in the board
+    });
+
     //add event to each square
     let _getPlayerMove = (() => {
         for (i = 0; i < _displayBoardSquares.length; i++) {
             _displayBoardSquares[i].addEventListener("click", e => {
-                let selectedCell = e.target.id.slice(-1); //get the position from the id of the button clicked
-                _pushToBoard(player1, selectedCell);//store the selected move in the array
-                _renderPlayerChoice(player1, selectedCell);//display the selected move in the board
-
-                //computer move
-                computerMove = _getComputerPlay().randomMove;
-                _pushToBoard(computer, computerMove);//store the selected move in the array
-                _renderPlayerChoice(computer, computerMove);//display the selected move in the board
+                //get moves
+                _playerMove(e);
+                _computerMove();
 
                 //calculate the index
-                let xMoves = _reduceIdx("x").indexes;
-                let oMoves = _reduceIdx("o").indexes;
+                let xMoves = _reduceIdx(player1.getMarker()).indexes;
+                let oMoves = _reduceIdx(computer.getMarker()).indexes;
 
                 //check if the game is over and run the necessary functions
                 game.gameOver(xMoves, oMoves, _displayBoard, _alertText, _board);
@@ -197,6 +211,7 @@ const board = (() => {
             _alertText.style.display = "none";
         });
     });
+
     
     _boardInit();
     
@@ -212,4 +227,3 @@ const board = (() => {
 //BUGS
 //can add two divs at the same square of the board
 //exceptions to the winning test for vertical combinations
-//cant use reset btn more than one time
