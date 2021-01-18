@@ -72,9 +72,10 @@ const board = (() => {
     const _resetBtn = document.getElementById("reset-btn");
 
     //sets an empty array with 9 slots
-    let _board = new Array(9);
+    let _board = Array.apply(null, Array(9)).map(() => {});
     //initializes the player object
     let player1 = player("x");
+    let computer = player("o");
 
     //initialize all the necessary functions related to the player object
     let _boardInit = () => {
@@ -139,6 +140,18 @@ const board = (() => {
         return {indexes};
     });
 
+    let _getAvailableMoves = (() => {
+        let emptySlots = _reduceIdx(undefined).indexes;
+        return {emptySlots}
+    });
+
+    let _getComputerPlay = (() => {
+        availableMoves = _getAvailableMoves().emptySlots;
+        movesArray = availableMoves.split("");
+        randomMove = movesArray[Math.floor(Math.random()*movesArray.length)];
+        return {randomMove};
+    });
+
     //add event to each square
     let _getPlayerMove = (() => {
         for (i = 0; i < _displayBoardSquares.length; i++) {
@@ -146,6 +159,7 @@ const board = (() => {
                 let selectedCell = e.target.id.slice(-1); //get the position from the id of the button clicked
                 _pushToBoard(selectedCell);//store the selected move in the array
                 _renderPlayerChoice(selectedCell);//display the selected move in the board
+                console.log(_getComputerPlay().randomMove);
 
                 //calculate the index
                 let xMoves = _reduceIdx("x").indexes;
@@ -162,7 +176,7 @@ const board = (() => {
 
         //add click event to the reset button
         _resetBtn.addEventListener("click", () => {
-            _board = new Array(9); //reset the board array
+            _board = Array.apply(null, Array(9)).map(() => {});; //reset the board array
             _markerSetter("x"); //set the player marker as x and alter the btn focus
 
             //loop trough the board squares
