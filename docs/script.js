@@ -83,10 +83,10 @@ const board = (() => {
     let computer = player("o");
 
 
-    //initialize all the necessary functions related to the player object
+    //initialize all the necessary functions
     let _boardInit = () => {
         _getPlayerMove();
-        _markerBtns();
+        _markerControlBtns();
         _resetGame();
     };
 
@@ -108,7 +108,7 @@ const board = (() => {
 
 
     //add click event to the marker buttons
-    let _markerBtns = (() => {
+    let _markerControlBtns = (() => {
         //start with the x button focused
         _xbuttonMarker.classList = "clicked-button";
         //add click event to the x button
@@ -123,7 +123,7 @@ const board = (() => {
     });
 
 
-    //insert the selected marker in the equivalent array index
+    //insert the selected marker in the corresponding index of array
     let _pushToBoard = ((player, idx) => {
         let playerMarker = player.getMarker();
         //only push if the position is empty
@@ -134,7 +134,7 @@ const board = (() => {
 
 
     //render the visual representation for the choices
-    let _renderPlayerChoice = (player, selected) => {
+    let _renderPlayerMove = (player, selected) => {
         let move = document.createElement("div");
         move.classList = player.getMarker();
         //only push if the position is empty
@@ -144,7 +144,7 @@ const board = (() => {
     };
 
 
-    //return a string with the indexes containing the specified marker in the array
+    //return a string with the indexes containing the specified value in the array
     let _reduceIdx = ((marker) => {
         const indexes = _board.reduce((idx, item, i) => {
             if (item === marker) {idx += i;};
@@ -154,39 +154,43 @@ const board = (() => {
     });
 
 
+    //return the empty indexes of the array
     let _getAvailableMoves = (() => {
         let emptySlots = _reduceIdx(undefined).indexes;
         return {emptySlots}
     });
 
 
-    let _getComputerPlay = (() => {
+    //generate a random move for the computer
+    let _getComputerMove = (() => {
         availableMoves = _getAvailableMoves().emptySlots;
-        movesArray = availableMoves.split("");
-        randomMove = movesArray[Math.floor(Math.random()*movesArray.length)];
+        availableMovesArray = availableMoves.split("");
+        randomMove = availableMovesArray[Math.floor(Math.random()*availableMovesArray.length)];
         return {randomMove};
     });
 
 
+    //excute, store and render the computer's move
     let _computerMove = (() => {
-        availablePlays = _getAvailableMoves().emptySlots.length;
+        availableMoves = _getAvailableMoves().emptySlots.length;
         //computer move if there are still available moves
-        if (availablePlays != 0) {
-            computerMove = _getComputerPlay().randomMove;
+        if (availableMoves > 0) {
+            computerMove = _getComputerMove().randomMove;
             _pushToBoard(computer, computerMove);//store the selected move in the array
-            _renderPlayerChoice(computer, computerMove);//display the selected move in the board
+            _renderPlayerMove(computer, computerMove);//display the selected move in the board
         };
     });
 
 
+    //store and render the player's move
     let _playerMove = ((ev) => {
         let selectedCell = ev.target.id.slice(-1); //get the position from the id of the button clicked
         _pushToBoard(player1, selectedCell);//store the selected move in the array
-        _renderPlayerChoice(player1, selectedCell);//display the selected move in the board
+        _renderPlayerMove(player1, selectedCell);//display the selected move in the board
     });
 
 
-    //add event to each square
+    //add event to each square of the board
     let _getPlayerMove = (() => {
         for (i = 0; i < _displayBoardSquares.length; i++) {
             _displayBoardSquares[i].addEventListener("click", e => {
