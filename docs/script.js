@@ -93,7 +93,7 @@ const board = (() => {
     let _boardInit = () => {
         _getPlayerMove();
         _markerControlBtns();
-        _resetGame();
+        _resetBtnEvent();
     };
 
 
@@ -115,6 +115,7 @@ const board = (() => {
 
     //add click event to the marker buttons
     let _markerControlBtns = (() => {
+        let possibleMoves = _getAvailableMoves().emptySlots;
         //start with the x button focused
         _xbuttonMarker.classList = "clicked-button";
         //add click event to the x button
@@ -125,6 +126,7 @@ const board = (() => {
         //add click event to the o button
         _obuttonMarker.addEventListener("click", () => {
             _markerSetter("o");
+            _computerMove();
         });
     });
 
@@ -209,7 +211,6 @@ const board = (() => {
     //render the reset in the displayed elements
     let _renderReset = (() => {
         let _boardSquares = _displayBoardSquares; //cache the board squares
-
         //loop trough the board squares
         for (i = 0; i < _boardSquares.length; i++) {
             //remove child, if it exists
@@ -225,12 +226,15 @@ const board = (() => {
 
 
     let _resetGame = (() => {
-        //add click event to the reset button
-        _resetBtn.addEventListener("click", () => {
-            _board = [0, 1, 2, 3, 4, 5, 6, 7, 8]; //reset the board array
-            _renderReset();
-            _markerSetter("x"); //set the player marker as x and alter the btn focus
-        });
+        //reset the board array
+        _board = [0, 1, 2, 3, 4, 5, 6, 7, 8]; 
+        _renderReset();
+        _markerSetter("x"); //set the player marker as x and alter the btn focus
+    });
+
+
+    let _resetBtnEvent = (() => {
+        _resetBtn.addEventListener("click", _resetGame);
     });
     
     _boardInit();
@@ -246,3 +250,4 @@ const board = (() => {
 
 //BUGS
 //can add two divs in the same square / every "sucessful" click triggers a computer move
+//when player uses "o", the game comes to a draw one move too early
