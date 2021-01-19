@@ -10,14 +10,22 @@ const player = (marker) => {
 //game module
 const game = (() => {
 
-    //check for winner
-    let _checkWin = ((idx) => {
-        //the combinations with 4 digits cover exceptions
-        let _possibleWins = ["048", "246", "012", "345", "678", "036", "147", "258", "0148", "0248", "0348", "0458", "0468", "0478", "2346", "2456"]; 
-        //RegEx constructor from all possible winning combinations
-        let _masterPattern = new RegExp(_possibleWins.join("|"));
-        return _masterPattern.test(idx);
-    });
+    function _checkWin(board, player){
+        if (
+        (board[0] == player && board[1] == player && board[2] == player) ||
+        (board[3] == player && board[4] == player && board[5] == player) ||
+        (board[6] == player && board[7] == player && board[8] == player) ||
+        (board[0] == player && board[3] == player && board[6] == player) ||
+        (board[1] == player && board[4] == player && board[7] == player) ||
+        (board[2] == player && board[5] == player && board[8] == player) ||
+        (board[0] == player && board[4] == player && board[8] == player) ||
+        (board[2] == player && board[4] == player && board[6] == player)
+        ) {
+        return true;
+        } else {
+        return false;
+        }
+    };
 
 
     //game outcomes
@@ -43,19 +51,17 @@ const game = (() => {
     //check if the game is over
     let gameOver = ((playerMoves, computerMoves, displayBoard, alertText, boardArray) => {
         //check for winning combinations
-        let playerTest = _checkWin(playerMoves);
-        let computerTest = _checkWin(computerMoves);
+        let playerTest = _checkWin(boardArray, playerMoves);
+        let computerTest = _checkWin(boardArray, computerMoves);
 
         //sum up all items in array
-        let arrItems = boardArray.reduce((acc, item) => acc + item, "");
-        //get the length of the string created
-        let arrFull = arrItems.length;
+        let arrItems = boardArray.filter(s => s != "o" && s != "x");
         
         if (playerTest !== false) {
             _win(displayBoard, alertText);
         } else if (computerTest !== false) {
             _lose(displayBoard, alertText);
-        } else if (arrFull === 9) {
+        } else if (arrItems.length === 0) {
             _draw(displayBoard, alertText);
         };
     });
@@ -77,7 +83,7 @@ const board = (() => {
     const _resetBtn = document.getElementById("reset-btn");
 
     //sets an empty array with 9 slots
-    let _board = Array.apply(null, Array(9)).map(() => {});
+    let _board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
     //initializes the player object
     let player1 = player("x");
     let computer = player("o");
@@ -127,36 +133,28 @@ const board = (() => {
     let _pushToBoard = ((player, idx) => {
         let playerMarker = player.getMarker();
         //only push if the position is empty
-        if (_displayBoardSquares[idx] != undefined){
+        if (_board[idx] != "x" || "o"){
             _board.splice(idx, 1, playerMarker);
         };
     });
 
 
     //render the visual representation for the choices
-    let _renderPlayerMove = (player, selected) => {
+    let _renderPlayerMove = (player, idx) => {
         let move = document.createElement("div");
+        let marker = _displayBoardSquares[idx].children[0];
+
         move.classList = player.getMarker();
         //only push if the position is empty
-        if (_displayBoardSquares[selected] != undefined) {
-            _displayBoardSquares[selected].appendChild(move);
+        if (marker === undefined) {
+            _displayBoardSquares[idx].appendChild(move);
         };
     };
 
 
-    //return a string with the indexes containing the specified value in the array
-    let _reduceIdx = ((marker) => {
-        const indexes = _board.reduce((idx, item, i) => {
-            if (item === marker) {idx += i;};
-            return idx;
-        }, []);
-        return {indexes};
-    });
-
-
     //return the empty indexes of the array
     let _getAvailableMoves = (() => {
-        let emptySlots = _reduceIdx(undefined).indexes;
+        let emptySlots = _board.filter(s => s != "o" && s != "x");
         return {emptySlots}
     });
 
@@ -164,8 +162,7 @@ const board = (() => {
     //generate a random move for the computer
     let _getComputerMove = (() => {
         availableMoves = _getAvailableMoves().emptySlots;
-        availableMovesArray = availableMoves.split("");
-        randomMove = availableMovesArray[Math.floor(Math.random()*availableMovesArray.length)];
+        randomMove = availableMoves[Math.floor(Math.random()*availableMoves.length)];
         return {randomMove};
     });
 
@@ -199,11 +196,11 @@ const board = (() => {
                 _computerMove();
 
                 //calculate the index
-                let _xMoves = _reduceIdx(player1.getMarker()).indexes;
-                let _oMoves = _reduceIdx(computer.getMarker()).indexes;
+                let _playerMarker = player1.getMarker();
+                let _computerMarker = computer.getMarker();
 
                 //check if the game is over and run the necessary functions
-                game.gameOver(_xMoves, _oMoves, _displayBoard, _alertText, _board);
+                game.gameOver(_playerMarker, _computerMarker, _displayBoard, _alertText, _board);
             });
         };
     });
@@ -230,9 +227,9 @@ const board = (() => {
     let _resetGame = (() => {
         //add click event to the reset button
         _resetBtn.addEventListener("click", () => {
-            _board = Array.apply(null, Array(9)).map(() => {});; //reset the board array
-            _markerSetter("x"); //set the player marker as x and alter the btn focus
+            _board = [0, 1, 2, 3, 4, 5, 6, 7, 8]; //reset the board array
             _renderReset();
+            _markerSetter("x"); //set the player marker as x and alter the btn focus
         });
     });
     
@@ -248,5 +245,4 @@ const board = (() => {
 //retorna a jogada baseada na dificuldade
 
 //BUGS
-//can add two divs at the same square of the board
-//exceptions to the winning test for vertical combinations
+//can add two divs in the same square / every "sucessful" click triggers a computer move
