@@ -10,7 +10,7 @@ const player = (marker) => {
 //game module
 const game = (() => {
 
-    function _checkWin(board, player){
+    function checkWin(board, player){
         if (
         (board[0] == player && board[1] == player && board[2] == player) ||
         (board[3] == player && board[4] == player && board[5] == player) ||
@@ -51,8 +51,8 @@ const game = (() => {
     //check if the game is over
     let gameOver = ((playerMoves, computerMoves, displayBoard, alertText, boardArray) => {
         //check for winning combinations
-        let playerTest = _checkWin(boardArray, playerMoves);
-        let computerTest = _checkWin(boardArray, computerMoves);
+        let playerTest = checkWin(boardArray, playerMoves);
+        let computerTest = checkWin(boardArray, computerMoves);
 
         //sum up all items in array
         let arrItems = boardArray.filter(s => s != "o" && s != "x");
@@ -66,7 +66,7 @@ const game = (() => {
         };
     });
 
-    return {gameOver};
+    return {checkWin, gameOver};
 
 })();
 
@@ -195,9 +195,9 @@ const board = (() => {
         availSpots = _getAvailableMoves().emptySlots;
 
         //check for the terminal states and return the value accordingly
-        if (_checkWin(newBoard, player1.getMarker())){
+        if (game.checkWin(newBoard, player1.getMarker())){
             return {score:-10};
-        } else if (_checkWin(newBoard, computer.getMarker())){
+        } else if (game.checkWin(newBoard, computer.getMarker())){
             return {score:10};
         } else if (availSpots.length === 0){
             return {score:0};
@@ -213,7 +213,7 @@ const board = (() => {
             move.index = newBoard[availSpots[i]];
 
             //set the empty spot to the current player
-            newBoard[availSpots[i]] = player;
+            newBoard[availSpots[i]] = player.getMarker();
 
             if (player === computer) {
                 let result = _minimax(newBoard, player1);
@@ -229,6 +229,29 @@ const board = (() => {
             //push the object to the array
             moves.push(move);
         };
+
+        //if it is the computer's turn, loop over the moves and choose the one with the highest score
+        let bestMove
+        if (player === computer) {
+            let bestScore = -10000;
+            for (i = 0; i < moves.length; i++) {
+                if (moves[i].score > bestScore) {
+                    bestScore = moves[i].score;
+                    bestMove = i;
+                };
+            };
+        } else { //loop over the moves and choose the move with the lowest score
+            let bestScore = 1000;
+            for (i = 0; i < moves.length; i++) {
+                if (moves[i].score < bestScore) {
+                    bestScore = moves[i].score;
+                    bestMove = i;
+                };
+            };
+        };
+
+        //return the chosen move (object) from the moves array
+        return moves[bestMove];
     });
 
 
