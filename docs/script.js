@@ -115,18 +115,27 @@ const board = (() => {
 
     //add click event to the marker buttons
     let _markerControlBtns = (() => {
-        let possibleMoves = _getAvailableMoves().emptySlots;
         //start with the x button focused
         _xbuttonMarker.classList = "clicked-button";
         //add click event to the x button
         _xbuttonMarker.addEventListener("click", () => {
-            _markerSetter("x");
+            if (_getAvailableMoves().emptySlots.length != 9){
+                _resetGame();
+            } else {
+                _markerSetter("x");
+            };
         });
 
         //add click event to the o button
         _obuttonMarker.addEventListener("click", () => {
-            _markerSetter("o");
-            _computerMove();
+            if (_getAvailableMoves().emptySlots.length != 9){
+                _resetGame();
+                _markerSetter("o");
+                _computerMove();
+            } else if (_getAvailableMoves().emptySlots.length === 9) {
+                _markerSetter("o");
+                _computerMove();
+            };
         });
     });
 
@@ -177,6 +186,48 @@ const board = (() => {
             computerMove = _getComputerMove().randomMove;
             _pushToBoard(computer, computerMove);//store the selected move in the array
             _renderPlayerMove(computer, computerMove);//display the selected move in the board
+        };
+    });
+
+
+    //main minimax function
+    let _minimax = ((newBoard, player) => {
+        availSpots = _getAvailableMoves().emptySlots;
+
+        //check for the terminal states and return the value accordingly
+        if (_checkWin(newBoard, player1.getMarker())){
+            return {score:-10};
+        } else if (_checkWin(newBoard, computer.getMarker())){
+            return {score:10};
+        } else if (availSpots.length === 0){
+            return {score:0};
+        }
+
+        // array to colect all the objects
+        moves = [];
+
+        //loop trough available spots
+        for (i = 0; i < availSpots.length; i++) {
+            //create an object for each and store the index of that spot
+            let move = {};
+            move.index = newBoard[availSpots[i]];
+
+            //set the empty spot to the current player
+            newBoard[availSpots[i]] = player;
+
+            if (player === computer) {
+                let result = _minimax(newBoard, player1);
+                move.score = result.score;
+            } else {
+                let result = _minimax(newBoard, computer);
+                move.score = result.score;
+            }
+
+            //reset the spot to empty
+            newBoard[availSpots[i]] = move.index;
+
+            //push the object to the array
+            moves.push(move);
         };
     });
 
@@ -250,4 +301,4 @@ const board = (() => {
 
 //BUGS
 //can add two divs in the same square / every "sucessful" click triggers a computer move
-//when player uses "o", the game comes to a draw one move too early
+//can spam moves, but doesn't compute because of errors
