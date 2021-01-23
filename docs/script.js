@@ -10,7 +10,7 @@ const playerFactory = (marker) => {
 //game module
 const game = (() => {
 
-    function checkWin(board, player){
+    let checkWin = ((board, player) => {
         if (
         (board[0] == player && board[1] == player && board[2] == player) ||
         (board[3] == player && board[4] == player && board[5] == player) ||
@@ -25,7 +25,23 @@ const game = (() => {
         } else {
         return false;
         }
-    };
+    });
+
+    let checkDraw = ((board, playerMarker, computerMarker) => {
+        let playerTest = checkWin(board, playerMarker);
+        let computerTest = checkWin(board, computerMarker);
+
+        if (playerTest && computerTest === false) {
+            return false;
+        };
+
+        for (i = 0; i < 9; i++) {
+            if (board[i] === undefined) {
+                return false;
+            };
+        };
+        return true;
+    });
 
 
     //game outcomes
@@ -49,24 +65,22 @@ const game = (() => {
 
 
     //check if the game is over
-    let gameOver = ((playerMoves, computerMoves, displayBoard, alertText, boardArray) => {
+    let gameOver = ((playerMarker, computerMarker, displayBoard, alertText, boardArray) => {
         //check for winning combinations
-        let playerTest = checkWin(boardArray, playerMoves);
-        let computerTest = checkWin(boardArray, computerMoves);
-
-        //sum up all items in array
-        let arrItems = boardArray.filter(s => s != "o" && s != "x");
+        let playerTest = checkWin(boardArray, playerMarker);
+        let computerTest = checkWin(boardArray, computerMarker);
+        let drawTest = checkDraw(boardArray, playerMarker, computerMarker);
         
         if (playerTest !== false) {
             _win(displayBoard, alertText);
         } else if (computerTest !== false) {
             _lose(displayBoard, alertText);
-        } else if (arrItems.length === 0) {
+        } else if (drawTest !== false) {
             _draw(displayBoard, alertText);
         };
     });
 
-    return {checkWin, gameOver};
+    return {checkWin, checkDraw, gameOver};
 
 })();
 
@@ -83,7 +97,7 @@ const board = (() => {
     const _resetBtn = document.getElementById("reset-btn");
 
     //sets an empty array with 9 slots
-    let _board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+    let _board = Array(9);
     //initializes the player object
     let player1 = playerFactory("x");
     let computer = playerFactory("o");
@@ -144,7 +158,7 @@ const board = (() => {
     let _pushToBoard = ((player, idx) => {
         let playerMarker = player.getMarker();
         //only push if the position is empty
-        if (_board[idx] != "x" || "o"){
+        if (_board[idx] !== "x" || "o"){
             _board.splice(idx, 1, playerMarker);
         };
     });
@@ -152,35 +166,41 @@ const board = (() => {
 
     //render the visual representation for the choices
     let _renderPlayerMove = (player, idx) => {
+        let displaySquares = Array.from(_displayBoardSquares);
         let move = document.createElement("div");
-        let marker = _displayBoardSquares[idx].children[0];
-
         move.classList = player.getMarker();
+
         //only push if the position is empty
-        if (marker === undefined) {
-            _displayBoardSquares[idx].appendChild(move);
+        if (_board[idx] !== "x" || "o") {
+            displaySquares[idx].appendChild(move);
         };
     };
 
 
     //return the empty indexes of the array
     let _getAvailableMoves = (() => {
-        let emptySlots = _board.filter(s => s != "o" && s != "x");
-        return {emptySlots}
+        let emptySlots = [];
+        for (i = 0; i < _board.length; i++) {
+            if (_board[i] === undefined) {
+                emptySlots.push(i);
+            };
+        };
+        return {emptySlots};
     });
 
 
     //main minimax function
     let _minimax = ((newBoard, player) => {
         let availSpots = _getAvailableMoves().emptySlots;
-        console.log(availSpots);
+        let playerMarker = player1.getMarker();
+        let computerMarker = computer.getMarker();
 
         //check for the terminal states and return the value accordingly
-        if (game.checkWin(newBoard, player1.getMarker())){
+        if (game.checkWin(newBoard, playerMarker)){
             return {score:-10};
-        } else if (game.checkWin(newBoard, computer.getMarker())){
+        } else if (game.checkWin(newBoard, computerMarker)){
             return {score:10};
-        } else if (availSpots.length === 0){
+        } else if (game.checkDraw(newBoard, playerMarker, computerMarker)){
             return {score:0};
         }
 
@@ -211,7 +231,7 @@ const board = (() => {
         };
 
         //if it is the computer's turn, loop over the moves and choose the one with the highest score
-        let bestMove
+        let bestMove;
         if (player === computer) {
             let bestScore = -10000;
             for (i = 0; i < moves.length; i++) {
@@ -244,16 +264,18 @@ const board = (() => {
     let _getComputerMove = (() => {
         availableMoves = _getAvailableMoves().emptySlots;
         randomMove = availableMoves[Math.floor(Math.random()*availableMoves.length)];
+        console.log(randomMove);
         return {randomMove};
     });
 
 
     //excute, store and render the computer's move
     let _computerMove = (() => {
-        availableMoves = _getAvailableMoves().emptySlots.length;
+        availableMoves = _getAvailableMoves().emptySlots;
         //computer move if there are still available moves
-        if (availableMoves > 0) {
+        if (availableMoves.length > 0) {
             computerMove = _bestMove();
+            console.log(computerMove);
             _pushToBoard(computer, computerMove);//store the selected move in the array
             _renderPlayerMove(computer, computerMove);//display the selected move in the board
         };
@@ -306,7 +328,7 @@ const board = (() => {
 
     let _resetGame = (() => {
         //reset the board array
-        _board = [0, 1, 2, 3, 4, 5, 6, 7, 8]; 
+        _board = Array(9);
         _renderReset();
         _markerSetter("x"); //set the player marker as x and alter the btn focus
     });
