@@ -1,5 +1,5 @@
 //player factory
-const player = (marker) => {
+const playerFactory = (marker) => {
     let _marker = marker;
     let getMarker = () => _marker;
     let setMarker = (newMarker) => _marker = newMarker; 
@@ -85,8 +85,8 @@ const board = (() => {
     //sets an empty array with 9 slots
     let _board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
     //initializes the player object
-    let player1 = player("x");
-    let computer = player("o");
+    let player1 = playerFactory("x");
+    let computer = playerFactory("o");
 
 
     //initialize all the necessary functions
@@ -170,29 +170,10 @@ const board = (() => {
     });
 
 
-    //generate a random move for the computer
-    let _getComputerMove = (() => {
-        availableMoves = _getAvailableMoves().emptySlots;
-        randomMove = availableMoves[Math.floor(Math.random()*availableMoves.length)];
-        return {randomMove};
-    });
-
-
-    //excute, store and render the computer's move
-    let _computerMove = (() => {
-        availableMoves = _getAvailableMoves().emptySlots.length;
-        //computer move if there are still available moves
-        if (availableMoves > 0) {
-            computerMove = _getComputerMove().randomMove;
-            _pushToBoard(computer, computerMove);//store the selected move in the array
-            _renderPlayerMove(computer, computerMove);//display the selected move in the board
-        };
-    });
-
-
     //main minimax function
     let _minimax = ((newBoard, player) => {
-        availSpots = _getAvailableMoves().emptySlots;
+        let availSpots = _getAvailableMoves().emptySlots;
+        console.log(availSpots);
 
         //check for the terminal states and return the value accordingly
         if (game.checkWin(newBoard, player1.getMarker())){
@@ -204,22 +185,21 @@ const board = (() => {
         }
 
         // array to colect all the objects
-        moves = [];
+       let moves = [];
 
         //loop trough available spots
         for (i = 0; i < availSpots.length; i++) {
             //create an object for each and store the index of that spot
             let move = {};
             move.index = newBoard[availSpots[i]];
-
             //set the empty spot to the current player
-            newBoard[availSpots[i]] = player.getMarker();
+            newBoard[availSpots[i]] = player;
 
-            if (player === computer) {
-                let result = _minimax(newBoard, player1);
+            if (player === computer.getMarker()) {
+                let result = _minimax(newBoard, player1.getMarker());
                 move.score = result.score;
             } else {
-                let result = _minimax(newBoard, computer);
+                let result = _minimax(newBoard, computer.getMarker());
                 move.score = result.score;
             }
 
@@ -241,7 +221,7 @@ const board = (() => {
                 };
             };
         } else { //loop over the moves and choose the move with the lowest score
-            let bestScore = 1000;
+            let bestScore = 10000;
             for (i = 0; i < moves.length; i++) {
                 if (moves[i].score < bestScore) {
                     bestScore = moves[i].score;
@@ -252,6 +232,31 @@ const board = (() => {
 
         //return the chosen move (object) from the moves array
         return moves[bestMove];
+    });
+
+
+    let _bestMove = (() => {
+        return _minimax(_board, computer.getMarker()).index;
+    });
+
+
+    //generate a random move for the computer
+    let _getComputerMove = (() => {
+        availableMoves = _getAvailableMoves().emptySlots;
+        randomMove = availableMoves[Math.floor(Math.random()*availableMoves.length)];
+        return {randomMove};
+    });
+
+
+    //excute, store and render the computer's move
+    let _computerMove = (() => {
+        availableMoves = _getAvailableMoves().emptySlots.length;
+        //computer move if there are still available moves
+        if (availableMoves > 0) {
+            computerMove = _bestMove();
+            _pushToBoard(computer, computerMove);//store the selected move in the array
+            _renderPlayerMove(computer, computerMove);//display the selected move in the board
+        };
     });
 
 
