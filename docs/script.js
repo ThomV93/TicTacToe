@@ -188,6 +188,37 @@ const board = (() => {
         return {emptySlots};
     });
 
+    /*const setFieldForAiLogic = (num, player) => {
+        if (player == undefined) {
+            _board[num] = undefined;
+            return;
+        }
+        _board[num] = player;
+    }
+
+
+    const findBestMove = (moves, player) => {
+        let bestMove;
+        if (player === computer) {
+            let bestScore = -10000;
+            for (let i = 0; i < moves.length; i++) {
+                if (moves[i].score > bestScore) {
+                    bestScore = moves[i].score;
+                    bestMove = i;
+                }
+            }
+        } else {
+            let bestScore = 10000;
+            for (let i = 0; i < moves.length; i++) {
+                if (moves[i].score < bestScore) {
+                    bestScore = moves[i].score;
+                    bestMove = i;
+                }
+            }
+        }
+        return moves[bestMove];
+    };
+
 
     //main minimax function
     let _minimax = ((newBoard, player) => {
@@ -213,7 +244,7 @@ const board = (() => {
             let move = {};
             move.index = newBoard[availSpots[i]];
             //set the empty spot to the current player
-            newBoard[availSpots[i]] = player;
+            setFieldForAiLogic(newBoard[i], player);
 
             if (player === computer.getMarker()) {
                 let result = _minimax(newBoard, player1.getMarker());
@@ -224,47 +255,24 @@ const board = (() => {
             }
 
             //reset the spot to empty
-            newBoard[availSpots[i]] = move.index;
+            setFieldForAiLogic(newBoard[i], undefined);
 
             //push the object to the array
             moves.push(move);
         };
-
-        //if it is the computer's turn, loop over the moves and choose the one with the highest score
-        let bestMove;
-        if (player === computer) {
-            let bestScore = -10000;
-            for (i = 0; i < moves.length; i++) {
-                if (moves[i].score > bestScore) {
-                    bestScore = moves[i].score;
-                    bestMove = i;
-                };
-            };
-        } else { //loop over the moves and choose the move with the lowest score
-            let bestScore = 10000;
-            for (i = 0; i < moves.length; i++) {
-                if (moves[i].score < bestScore) {
-                    bestScore = moves[i].score;
-                    bestMove = i;
-                };
-            };
-        };
-
-        //return the chosen move (object) from the moves array
-        return moves[bestMove];
+        return findBestMove(moves, player);
     });
 
 
     let _bestMove = (() => {
         return _minimax(_board, computer.getMarker()).index;
-    });
+    });*/
 
 
     //generate a random move for the computer
     let _getComputerMove = (() => {
         availableMoves = _getAvailableMoves().emptySlots;
         randomMove = availableMoves[Math.floor(Math.random()*availableMoves.length)];
-        console.log(randomMove);
         return {randomMove};
     });
 
@@ -274,8 +282,7 @@ const board = (() => {
         availableMoves = _getAvailableMoves().emptySlots;
         //computer move if there are still available moves
         if (availableMoves.length > 0) {
-            computerMove = _bestMove();
-            console.log(computerMove);
+            computerMove = _getComputerMove().randomMove;
             _pushToBoard(computer, computerMove);//store the selected move in the array
             _renderPlayerMove(computer, computerMove);//display the selected move in the board
         };
@@ -344,10 +351,6 @@ const board = (() => {
 
 
 // ---- TO DO ------
-
-//AI
-//retorna os niveis de dificuldade possiveis
-//retorna a jogada baseada na dificuldade
 
 //BUGS
 //can add two divs in the same square / every "sucessful" click triggers a computer move
